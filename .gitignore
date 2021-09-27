@@ -1,0 +1,16 @@
+Quoridor/.idea/
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/.idea.Quoridor.iml
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+Quoridor.Model/.idea/.idea.Quoridor/.idea/encodings.xml
+Quoridor.Model/.idea/.idea.Quoridor/.idea/indexLayout.xml
+Quoridor.Model/.idea/.idea.Quoridor/.idea/vcs.xml
+Quoridor.Model/.idea/.idea.Quoridor/.idea/projectSettingsUpdater.xml
+Quoridor.Model/.idea/.idea.Quoridor/.idea/workspace.xml
+Quoridor.Model/obj/Debug/Quoridor.csproj.AssemblyReference.cache
+Quoridor.Model/obj/Debug/Quoridor.csproj.AssemblyReference.cache
