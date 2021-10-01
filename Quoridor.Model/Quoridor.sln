@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quoridor", "Quoridor.csproj", "{03874662-80E1-48A6-9D77-D2265AC688BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quoridor.Model", "Quoridor.Model.csproj", "{03874662-80E1-48A6-9D77-D2265AC688BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quoridor.View", "Quoridor.View\Quoridor.View.csproj", "{74020FEC-0814-4443-91D4-D33BF9930B24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{03874662-80E1-48A6-9D77-D2265AC688BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03874662-80E1-48A6-9D77-D2265AC688BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03874662-80E1-48A6-9D77-D2265AC688BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03874662-80E1-48A6-9D77-D2265AC688BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74020FEC-0814-4443-91D4-D33BF9930B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74020FEC-0814-4443-91D4-D33BF9930B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74020FEC-0814-4443-91D4-D33BF9930B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74020FEC-0814-4443-91D4-D33BF9930B24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

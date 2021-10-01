@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{03874662-80E1-48A6-9D77-D2265AC688BE}</ProjectGuid>
-        <OutputType>Library</OutputType>
+        <ProjectGuid>{74020FEC-0814-4443-91D4-D33BF9930B24}</ProjectGuid>
+        <OutputType>Exe</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Quoridor</RootNamespace>
-        <AssemblyName>Quoridor.Model</AssemblyName>
+        <RootNamespace>Quoridor.View</RootNamespace>
+        <AssemblyName>Quoridor.View</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -38,12 +38,14 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Cell.cs" />
-        <Compile Include="Player.cs" />
-        <Compile Include="Vector2.cs" />
-        <Compile Include="Field.cs" />
-        <Compile Include="Quoridor.cs" />
+        <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Quoridor.Model.csproj">
+        <Project>{03874662-80e1-48a6-9d77-d2265ac688be}</Project>
+        <Name>Quoridor.Model</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

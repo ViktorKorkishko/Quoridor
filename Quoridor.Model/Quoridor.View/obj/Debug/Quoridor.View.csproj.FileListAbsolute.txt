@@ -1,0 +1,9 @@
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\bin\Debug\Quoridor.View.exe
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\bin\Debug\Quoridor.View.pdb
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\bin\Debug\Quoridor.Model.dll
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\bin\Debug\Quoridor.Model.pdb
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.csproj.AssemblyReference.cache
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.csproj.CoreCompileInputs.cache
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.csproj.CopyComplete
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.exe
+C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.pdb
