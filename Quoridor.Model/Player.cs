@@ -1,10 +1,18 @@
-﻿namespace Quoridor
+namespace Quoridor
 {
-    
-    public enum Player : byte
+    public class Player
     {
-        None = 0,
-        First = 1,
-        Second = 2
+        public readonly string Name;
+        public Vector2 Position { get; private set; }
+
+        public Player(string name)
+        {
+            Name = name;
+        }
+
+        public void Move(Vector2 position)
+        {
+            Position = position;
+        }
     }
 }

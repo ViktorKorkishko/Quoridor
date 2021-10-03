@@ -3,11 +3,11 @@
     public class Field
     {
         public readonly Vector2 Size;
-        public readonly Cell[,] Field1;
+        public readonly Cell[,] Cells;
 
         public Field(Vector2 size)
         {
-            Field1 = new Cell[size.x, size.y];
+            Cells = new Cell[size.x, size.y];
             Size = size;
         }
     }

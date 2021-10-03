@@ -4,3 +4,8 @@ C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\bin\Debug\Quoridor.Model.dl
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\bin\Debug\Quoridor.Model.pdb
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\obj\Debug\Quoridor.Model.dll
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\obj\Debug\Quoridor.Model.pdb
+D:\RiderProjects\Quoridor\Quoridor.Model\obj\Debug\Quoridor.Model.csprojResolveAssemblyReference.cache
+D:\RiderProjects\Quoridor\Quoridor.Model\obj\Debug\Quoridor.Model.dll
+D:\RiderProjects\Quoridor\Quoridor.Model\obj\Debug\Quoridor.Model.pdb
+D:\RiderProjects\Quoridor\Quoridor.Model\bin\Debug\Quoridor.Model.dll
+D:\RiderProjects\Quoridor\Quoridor.Model\bin\Debug\Quoridor.Model.pdb

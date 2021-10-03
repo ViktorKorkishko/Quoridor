@@ -7,3 +7,10 @@ C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quo
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.csproj.CopyComplete
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.exe
 C:\Users\korki\RiderProjects\Quoridor\Quoridor.Model\Quoridor.View\obj\Debug\Quoridor.View.pdb
+D:\RiderProjects\Quoridor\Quoridor.View\bin\Debug\Quoridor.View.exe
+D:\RiderProjects\Quoridor\Quoridor.View\bin\Debug\Quoridor.View.pdb
+D:\RiderProjects\Quoridor\Quoridor.View\bin\Debug\Quoridor.Model.dll
+D:\RiderProjects\Quoridor\Quoridor.View\bin\Debug\Quoridor.Model.pdb
+D:\RiderProjects\Quoridor\Quoridor.View\obj\Debug\Quoridor.View.csprojResolveAssemblyReference.cache
+D:\RiderProjects\Quoridor\Quoridor.View\obj\Debug\Quoridor.View.exe
+D:\RiderProjects\Quoridor\Quoridor.View\obj\Debug\Quoridor.View.pdb
