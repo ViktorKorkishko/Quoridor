@@ -3,8 +3,7 @@
     public enum Turn
     {
         FirstPlayer = 0,
-        SecondPlayer = 1,
-        ThirdPlayer = 2
+        SecondPlayer = 1
     }
 
     public class Quoridor
