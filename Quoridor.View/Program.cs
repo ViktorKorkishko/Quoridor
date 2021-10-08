@@ -10,26 +10,26 @@ namespace Quoridor.View
     {
         public static void Main(string[] args)
         {
-            // Console.WriteLine("Welcome to Quoridor!");
-            //
-            // Console.Write("Enter first player name: ");
-            // string firstPlayerName = Console.ReadLine();
-            // Console.WriteLine("You will be marked as 1 in the game field.");
+             Console.WriteLine("Welcome to Quoridor!");
             
-            //Console.Write("Enter second player name: ");
-            //string secondPlayerName = Console.ReadLine();
-            //Console.WriteLine("You will be marked as 2 in the game field.");
+             Console.Write("Enter first player name: ");
+             string firstPlayerName = Console.ReadLine();
+             Console.WriteLine("You will be marked as 1 in the game field.");
+            
+            Console.Write("Enter second player name: ");
+            string secondPlayerName = Console.ReadLine();
+            Console.WriteLine("You will be marked as 2 in the game field.");
 
-            //Console.Write("Enter field horizontal size: ");
-            //int y = int.Parse(Console.ReadLine());
+            Console.Write("Enter field horizontal size: ");
+            int y = int.Parse(Console.ReadLine());
 
-            //Console.Write("Enter field vertical size: ");
-            //int x = int.Parse(Console.ReadLine());
+            Console.Write("Enter field vertical size: ");
+            int x = int.Parse(Console.ReadLine());
 
-            var firstPlayer = new Player("Player1");
-            var secondPlayer = new Player("Player2");
+            var firstPlayer = new Player(firstPlayerName);
+            var secondPlayer = new Player(secondPlayerName);
 
-            var game = new Quoridor(4, 5, firstPlayer, secondPlayer);
+            var game = new Quoridor(x, y, firstPlayer, secondPlayer);
 
             while (true)
             {
