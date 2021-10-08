@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Quoridor
+﻿namespace Quoridor
 {
     public class Cell
     {

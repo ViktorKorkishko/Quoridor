@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 
 namespace Quoridor.View
@@ -10,77 +12,78 @@ namespace Quoridor.View
         {
             // Console.WriteLine("Welcome to Quoridor!");
             //
-            // Console.Write('—');
-            //
             // Console.Write("Enter first player name: ");
             // string firstPlayerName = Console.ReadLine();
             // Console.WriteLine("You will be marked as 1 in the game field.");
-            //
-            // Console.Write("Enter second player name: ");
-            // string secondPlayerName = Console.ReadLine();
-            // Console.WriteLine("You will be marked as 2 in the game field.");
+            
+            //Console.Write("Enter second player name: ");
+            //string secondPlayerName = Console.ReadLine();
+            //Console.WriteLine("You will be marked as 2 in the game field.");
 
-            Console.Write("Enter field horizontal size: ");
-            // int y = int.Parse(Console.ReadLine());
+            //Console.Write("Enter field horizontal size: ");
+            //int y = int.Parse(Console.ReadLine());
 
-            Console.Write("Enter field vertical size: ");
-            // int x = int.Parse(Console.ReadLine());
+            //Console.Write("Enter field vertical size: ");
+            //int x = int.Parse(Console.ReadLine());
 
             var firstPlayer = new Player("Player1");
             var secondPlayer = new Player("Player2");
 
-            var game = new Quoridor(3, 5, firstPlayer, secondPlayer);
+            var game = new Quoridor(4, 5, firstPlayer, secondPlayer);
 
             while (true)
             {
+                Console.WriteLine("First player position: " + game.FirstPlayer.Position);
+                Console.WriteLine("Second player position: " + game.SecondPlayer.Position);
+
                 DisplayField(game.Field.Cells, firstPlayer, secondPlayer);
                 Console.WriteLine(game.GetCurrentPlayer().Name + " turns");
                 
-                Console.WriteLine("First player position: " + game.GetCurrentPlayer().Position);
-                game.SwitchPlayer();
-                Console.WriteLine("Second player position: " + game.GetCurrentPlayer().Position);
-                game.SwitchPlayer();
-                
                 Console.WriteLine("What would you like to do?");
 
-                int index = int.Parse(Console.ReadLine());
-                
-                switch (index)
+                char input = Console.ReadLine()[0];
+                bool turnResult = false;
+                switch (input)
                 {
-                    case 1:
-                        game.TryMovePlayer(Direction.Up);
-                        break;
-                    case 2:
-                        game.TryMovePlayer(Direction.Down);
-                        break;
-                    case 3:
-                        game.TryMovePlayer(Direction.Left);
-                        break;
-                    case 4:
-                        game.TryMovePlayer(Direction.Right);
+                    case 'w':
+                        turnResult = game.TryMoveCurrentPlayer(Direction.Up);
                         break;
                     
-                    default:
+                    case 's':
+                        turnResult = game.TryMoveCurrentPlayer(Direction.Down);
+                        break;
+                    
+                    case 'a':
+                        turnResult = game.TryMoveCurrentPlayer(Direction.Left);
+                        break;
+                    
+                    case 'd':
+                        turnResult = game.TryMoveCurrentPlayer(Direction.Right);
                         break;
                 }
-                
-                game.SwitchPlayer();
+
+                if (turnResult)
+                {
+                    game.SwitchPlayer();
+                }
             }
         }
 
         private static void DisplayField(Cell[,] field, Player firstPlayer, Player secondPlayer)
         {
-            Console.WriteLine();
-            for (int k = 0; k < field.GetLength(1) * 2 + 1; k++)
+            int rowsCount = field.GetLength(0);
+            int columsCount = field.GetLength(1);
+            
+            for (int k = 0; k < columsCount * 2 + 1; k++)
             {
                 Console.Write("-");
             }
 
             Console.WriteLine();
 
-            for (int i = 0; i < field.GetLength(0); i++)
+            for (int i = 0; i < rowsCount; i++)
             {
-                for (int j = 0; j < field.GetLength(1); j++)
+                for (int j = 0; j < columsCount; j++)
                 {
                     if (j == 0)
                     {
@@ -107,7 +110,7 @@ namespace Quoridor.View
 
                 Console.WriteLine();
 
-                for (int k = 0; k < field.GetLength(1) * 2 + 1; k++)
+                for (int k = 0; k < columsCount * 2 + 1; k++)
                 {
                     Console.Write("-");
                 }

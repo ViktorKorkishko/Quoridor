@@ -1,4 +1,7 @@
-﻿namespace Quoridor
+﻿using System;
+using System.Diagnostics;
+
+namespace Quoridor
 {
     public enum Turn
     {
@@ -15,55 +18,72 @@
 
         public readonly Field Field;
 
-        public Quoridor(int fieldHorizontalSize, int fieldVerticalSize, Player firstPlayer, Player secondPlayer)
+        public Quoridor(int rows, int columns, Player firstPlayer, Player secondPlayer)
         {
-            Field = new Field(new Vector2(fieldHorizontalSize, fieldVerticalSize));
+            Field = new Field(new Vector2(rows, columns));
 
             FirstPlayer = firstPlayer;
-            //FirstPlayer.Move(new Vector2(fieldVerticalSize / 2, 0));
-            FirstPlayer.MoveTo(new Vector2(1, 1));
-            
             SecondPlayer = secondPlayer;
-            //SecondPlayer.Move(new Vector2(fieldVerticalSize / 2, Field.Size.x - 1));
-            FirstPlayer.MoveTo(new Vector2(2, 2));
-            
             CurrentPlayerTurn = Turn.FirstPlayer;
 
             SetupField();
+            PlacePlayersOnStartPosition();
         }
 
-        public bool TryMovePlayer(Direction direction)
+        public bool TryMoveCurrentPlayer(Direction direction)
         {
             Player player;
+            Vector2 potentialPosition;
+            
             switch (direction)
             {
                 case Direction.Up:
                     player = GetCurrentPlayer();
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                    player.Move(Vector2.Up);
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                    break;
-
+                    potentialPosition = player.Position + Vector2.Left;
+                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    {
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                        player.Move(Vector2.Left);
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                        return true;
+                    }
+                    return false;
+                
                 case Direction.Down:
                     player = GetCurrentPlayer();
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                    player.Move(Vector2.Down);
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                    break;
-                
+                    potentialPosition = player.Position + Vector2.Right;
+                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    {
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                        player.Move(Vector2.Right);
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                        return true;
+                    }
+                    return false;
+
                 case Direction.Left:
                     player = GetCurrentPlayer();
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                    player.Move(Vector2.Left);
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                    break;
-                
+                    potentialPosition = player.Position + Vector2.Down;
+                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    {
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                        player.Move(Vector2.Down);
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                        return true;
+                    }
+                    return false;
+
                 case Direction.Right:
                     player = GetCurrentPlayer();
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                    player.Move(Vector2.Right);
-                    Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                    break;
+                    potentialPosition = player.Position + Vector2.Up;
+                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    {
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                        player.Move(Vector2.Up);
+                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                        return true;
+                    }
+                    return false;
             }
 
             return false;
@@ -92,46 +112,61 @@
 
         private void SetupField()
         {
-            // int centerIndex;
-            // if (Field.Size.x % 2 == 1)
-            // {
-            //     centerIndex = Field.Size.y / 2;
-            // }
-            // else
-            // {
-            //     centerIndex = Field.Size.y / 2 - 1;
-            // }
-
             for (int x = 0; x < Field.Cells.GetLength(0); x++)
             {
                 for (int y = 0; y < Field.Cells.GetLength(1); y++)
                 {
                     var newCell = new Cell(Field, new Vector2(x, y));
                     Field.Cells[x, y] = newCell;
-
-                    if (FirstPlayer.Position == new Vector2(x, y))
-                    {
-                        newCell.PlayerOver = FirstPlayer;
-                    }
-                    else if (SecondPlayer.Position == new Vector2(x, y))
-                    {
-                        newCell.PlayerOver = SecondPlayer;
-                    }
                 }
+            }
+        }
+
+        private void PlacePlayersOnStartPosition()
+        {
+            int centerIndex = GetCenterIndex();
+            Vector2 firstPlayerPosition = new Vector2(0, centerIndex);
+            Vector2 secondPlayerPosition = new Vector2(Field.Size.x - 1, centerIndex);
+
+            FirstPlayer.MoveTo(firstPlayerPosition);
+            Field.Cells[firstPlayerPosition.x, secondPlayerPosition.y].PlayerOver = FirstPlayer;
+            
+            SecondPlayer.MoveTo(secondPlayerPosition);
+            Field.Cells[secondPlayerPosition.x, secondPlayerPosition.y].PlayerOver = SecondPlayer;
+
+            int GetCenterIndex()
+            {
+                if (Field.Size.y % 2 == 0)
+                {
+                    return Field.Size.y / 2 - 1;
+                }
+
+                return Field.Size.y / 2;
             }
         }
 
         private bool IsOutOfRange(Vector2 position)
         {
-            if (position.x < Field.Size.x && position.x >= 0)
+            if (position.x >= 0 && position.x < Field.Size.x)
             {
-                if (position.y < Field.Size.y && position.y >= 0)
+                if (position.y >= 0 && position.y < Field.Size.y)
                 {
                     return false;
                 }
             }
 
             return true;
+        }
+
+        private bool IsPlayerStandingOnCell(Vector2 cellPosition)
+        {
+            Player player = Field.Cells[cellPosition.x, cellPosition.y].PlayerOver;
+            if (player != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
