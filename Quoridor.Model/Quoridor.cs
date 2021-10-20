@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Quoridor
@@ -17,10 +18,12 @@ namespace Quoridor
         public Turn CurrentPlayerTurn { get; private set; }
 
         public readonly Field Field;
+        public readonly List<DeprecatedPath> DeprecatedPaths;
 
         public Quoridor(int rows, int columns, Player firstPlayer, Player secondPlayer)
         {
             Field = new Field(new Vector2(rows, columns));
+            DeprecatedPaths = new List<DeprecatedPath>();
 
             FirstPlayer = firstPlayer;
             SecondPlayer = secondPlayer;
@@ -34,55 +37,71 @@ namespace Quoridor
         {
             Player player;
             Vector2 potentialPosition;
-            
+
             switch (direction)
             {
                 case Direction.Up:
                     player = GetCurrentPlayer();
                     potentialPosition = player.Position + Vector2.Left;
-                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                        player.Move(Vector2.Left);
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                        return true;
+                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        {
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                            player.Move(Vector2.Left);
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                            return true;
+                        }
                     }
+
                     return false;
-                
+
                 case Direction.Down:
                     player = GetCurrentPlayer();
                     potentialPosition = player.Position + Vector2.Right;
-                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                        player.Move(Vector2.Right);
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                        return true;
+                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        {
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                            player.Move(Vector2.Right);
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                            return true;
+                        }
                     }
+
                     return false;
 
                 case Direction.Left:
                     player = GetCurrentPlayer();
                     potentialPosition = player.Position + Vector2.Down;
-                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                        player.Move(Vector2.Down);
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                        return true;
+                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        {
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                            player.Move(Vector2.Down);
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                            return true;
+                        }
                     }
+
                     return false;
 
                 case Direction.Right:
                     player = GetCurrentPlayer();
                     potentialPosition = player.Position + Vector2.Up;
-                    if (!IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
+                    if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
-                        player.Move(Vector2.Up);
-                        Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
-                        return true;
+                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        {
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
+                            player.Move(Vector2.Up);
+                            Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+                            return true;
+                        }
                     }
+
                     return false;
             }
 
@@ -130,7 +149,7 @@ namespace Quoridor
 
             FirstPlayer.MoveTo(firstPlayerPosition);
             Field.Cells[firstPlayerPosition.x, secondPlayerPosition.y].PlayerOver = FirstPlayer;
-            
+
             SecondPlayer.MoveTo(secondPlayerPosition);
             Field.Cells[secondPlayerPosition.x, secondPlayerPosition.y].PlayerOver = SecondPlayer;
 
@@ -145,17 +164,32 @@ namespace Quoridor
             }
         }
 
-        private bool IsOutOfRange(Vector2 position)
+        public bool TryAddDeprecatedPath(DeprecatedPath newDeprecatedPath)
         {
-            if (position.x >= 0 && position.x < Field.Size.x)
+            if (!IsDeprecatedPathExists(newDeprecatedPath))
             {
-                if (position.y >= 0 && position.y < Field.Size.y)
+                DeprecatedPaths.Add(newDeprecatedPath);
+                DeprecatedPaths.Add(new DeprecatedPath(newDeprecatedPath.SecondPoint, newDeprecatedPath.FirstPoint));
+                return true;
+            }
+
+            return false;
+
+            
+        }
+        
+        private bool IsDeprecatedPathExists(DeprecatedPath deprecatedPath)
+        {
+            foreach (var path in DeprecatedPaths)
+            {
+                if (path.FirstPoint == deprecatedPath.FirstPoint &&
+                    path.SecondPoint == deprecatedPath.SecondPoint)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         private bool IsPlayerStandingOnCell(Vector2 cellPosition)
