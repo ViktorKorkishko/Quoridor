@@ -19,8 +19,7 @@
 
         public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.x + b.x, a.y + b.y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new(a.x - b.x, a.y - b.y);
-
-        public static bool operator ==(Vector2 a, Vector2 b) => a.x - b.x + a.y - b.y == 0;
+        public static bool operator ==(Vector2 a, Vector2 b) => a.x == b.x && a.y == b.y;
         public static bool operator !=(Vector2 a, Vector2 b) => !(a == b);
 
         public override string ToString() => $"({x}, {y})";

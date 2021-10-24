@@ -7,7 +7,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Quoridor.View
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -34,8 +34,11 @@ namespace Quoridor.View
 
             var game = new Quoridor(x, y, firstPlayer, secondPlayer);
 
-            Console.WriteLine(game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2))));
-            // Console.WriteLine(game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(4, 2), new Vector2(3, 2))));
+            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2)));
+            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(0, 3)));
+
+            
+            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(4, 2), new Vector2(3, 2)));
 
             while (true)
             {
@@ -101,9 +104,11 @@ namespace Quoridor.View
 
                         if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
                         {
+                            // check if cells are close
+                            
                             // Cell firstCell = game.Field.Cells[firstPoint.x, firstPoint.y];
                             // Cell secondCell = game.Field.Cells[secondPoint.x, secondPoint.y];
-
+                            // 
                             // if (firstCell.UpperCell == secondCell ||
                             //     firstCell.LowerCell == secondCell ||
                             //     firstCell.LeftCell == secondCell ||
@@ -201,17 +206,11 @@ namespace Quoridor.View
                     {
                         if (c % 2 == 1)
                         {
-                            int reventedC = c / 2;
-
-                            var fp = new Vector2(r, reventedC);
-                            var sp = new Vector2(r + 1, reventedC);
+                            var fp = new Vector2(r, c / 2);
+                            var sp = new Vector2(r + 1, c / 2);
 
                             if (game.DoesDeprecatedPathExist(new DeprecatedPath(fp, sp)))
                             {
-                                Console.WriteLine(reventedC);
-                                Console.WriteLine("fp = " + fp);
-                                Console.WriteLine("sp = " + sp);
-                                
                                 separationChar = '■';
                             }
                         }
