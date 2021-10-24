@@ -45,7 +45,7 @@ namespace Quoridor
                     potentialPosition = player.Position + Vector2.Left;
                     if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        if (!DoesDeprecatedPathExist(new DeprecatedPath(player.Position, potentialPosition)))
                         {
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Left);
@@ -61,7 +61,7 @@ namespace Quoridor
                     potentialPosition = player.Position + Vector2.Right;
                     if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        if (!DoesDeprecatedPathExist(new DeprecatedPath(player.Position, potentialPosition)))
                         {
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Right);
@@ -77,7 +77,7 @@ namespace Quoridor
                     potentialPosition = player.Position + Vector2.Down;
                     if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        if (!DoesDeprecatedPathExist(new DeprecatedPath(player.Position, potentialPosition)))
                         {
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Down);
@@ -93,7 +93,7 @@ namespace Quoridor
                     potentialPosition = player.Position + Vector2.Up;
                     if (!Field.IsOutOfRange(potentialPosition) && !IsPlayerStandingOnCell(potentialPosition))
                     {
-                        if (!IsDeprecatedPathExists(new DeprecatedPath(player.Position, potentialPosition)))
+                        if (!DoesDeprecatedPathExist(new DeprecatedPath(player.Position, potentialPosition)))
                         {
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Up);
@@ -166,24 +166,24 @@ namespace Quoridor
 
         public bool TryAddDeprecatedPath(DeprecatedPath newDeprecatedPath)
         {
-            if (!IsDeprecatedPathExists(newDeprecatedPath))
+            if (!DoesDeprecatedPathExist(newDeprecatedPath))
             {
                 DeprecatedPaths.Add(newDeprecatedPath);
-                DeprecatedPaths.Add(new DeprecatedPath(newDeprecatedPath.SecondPoint, newDeprecatedPath.FirstPoint));
                 return true;
             }
 
             return false;
-
-            
         }
-        
-        private bool IsDeprecatedPathExists(DeprecatedPath deprecatedPath)
+
+        public bool DoesDeprecatedPathExist(DeprecatedPath deprecatedPath)
         {
             foreach (var path in DeprecatedPaths)
             {
                 if (path.FirstPoint == deprecatedPath.FirstPoint &&
-                    path.SecondPoint == deprecatedPath.SecondPoint)
+                    path.SecondPoint == deprecatedPath.SecondPoint
+                    ||
+                    path.FirstPoint == deprecatedPath.SecondPoint &&
+                    path.SecondPoint == deprecatedPath.FirstPoint)
                 {
                     return true;
                 }

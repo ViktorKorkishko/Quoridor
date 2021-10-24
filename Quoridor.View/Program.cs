@@ -24,7 +24,7 @@ namespace Quoridor.View
             // Console.Write("Enter field horizontal size: ");
             // int y = int.Parse(Console.ReadLine());
             int y = 5;
-            
+
             // Console.Write("Enter field vertical size: ");
             // int x = int.Parse(Console.ReadLine());
             int x = 5;
@@ -34,16 +34,19 @@ namespace Quoridor.View
 
             var game = new Quoridor(x, y, firstPlayer, secondPlayer);
 
+            Console.WriteLine(game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2))));
+            // Console.WriteLine(game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(4, 2), new Vector2(3, 2))));
+
             while (true)
             {
-                DisplayField(game.Field.Cells, firstPlayer, secondPlayer);
+                DisplayField(game);
                 Console.WriteLine(game.GetCurrentPlayer().Name + " turns");
 
                 Console.WriteLine("What would you like to do?");
-                
+
                 Console.WriteLine("1. Move");
                 Console.WriteLine("2. Set wall");
-                
+
                 Console.Write("Your choice: ");
                 string turnInput = Console.ReadLine();
 
@@ -98,15 +101,16 @@ namespace Quoridor.View
 
                         if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
                         {
-                            Cell firstCell = game.Field.Cells[firstPoint.x, firstPoint.y];
-                            Cell secondCell = game.Field.Cells[secondPoint.x, secondPoint.y];
-                            
+                            // Cell firstCell = game.Field.Cells[firstPoint.x, firstPoint.y];
+                            // Cell secondCell = game.Field.Cells[secondPoint.x, secondPoint.y];
+
                             // if (firstCell.UpperCell == secondCell ||
                             //     firstCell.LowerCell == secondCell ||
                             //     firstCell.LeftCell == secondCell ||
                             //     firstCell.RightCell == secondCell)
                             {
-                                turnResult = game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1), new Vector2(x2, y2)));
+                                turnResult =
+                                    game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1), new Vector2(x2, y2)));
                             }
                         }
                     }
@@ -115,13 +119,11 @@ namespace Quoridor.View
                         turnResult = false;
                     }
                 }
-                else if(turnInput == "3")
+                else if (turnInput == "3")
                 {
-                    Console.WriteLine("Deprecated paths");
-                    foreach (var path in game.DeprecatedPaths)
-                    {
-                        Console.WriteLine(path.FirstPoint);
-                    }
+                    Console.WriteLine("Deprecated paths:");
+                    game.DeprecatedPaths.ForEach(p => Console.WriteLine(p));
+                    Console.WriteLine();
                 }
 
                 if (turnResult)
@@ -135,37 +137,53 @@ namespace Quoridor.View
             }
         }
 
-        private static void DisplayField(Cell[,] field, Player firstPlayer, Player secondPlayer)
+        private static void DisplayField(Quoridor game)
         {
+            Cell[,] field = game.Field.Cells;
+            Player firstPlayer = game.FirstPlayer;
+            Player secondPlayer = game.SecondPlayer;
+
             int rowsCount = field.GetLength(0);
             int columsCount = field.GetLength(1);
 
-            for (int k = 0; k < columsCount * 2 + 1; k++)
+            char separationChar = '-';
+
+            for (int c = 0; c < columsCount * 2 + 1; c++)
             {
-                Console.Write("-");
+                Console.Write(separationChar);
             }
 
             Console.WriteLine();
 
-            for (int i = 0; i < rowsCount; i++)
+            for (int r = 0; r < rowsCount; r++)
             {
-                for (int j = 0; j < columsCount; j++)
+                for (int c = 0; c < columsCount; c++)
                 {
-                    if (j == 0)
+                    separationChar = '|';
+                    
+                    if (c == 0)
                     {
-                        Console.Write("|");
+                        Console.Write(separationChar);
                     }
-
-                    Player playerOver = field[i, j].PlayerOver;
+                    
+                    if (!game.Field.IsOutOfRange(new Vector2(r, c + 1)))
+                    {
+                        if (game.DoesDeprecatedPathExist(new DeprecatedPath(new Vector2(r, c), new Vector2(r, c + 1))))
+                        {
+                            separationChar = '■';
+                        }
+                    }
+                    
+                    Player playerOver = field[r, c].PlayerOver;
                     if (playerOver != null)
                     {
                         if (playerOver == firstPlayer)
                         {
-                            Console.Write("1|");
+                            Console.Write("1" + separationChar);
                         }
                         else if (playerOver == secondPlayer)
                         {
-                            Console.Write("2|");
+                            Console.Write("2" + separationChar);
                         }
                     }
                     else
@@ -176,9 +194,30 @@ namespace Quoridor.View
 
                 Console.WriteLine();
 
-                for (int k = 0; k < columsCount * 2 + 1; k++)
+                for (int c = 0; c < columsCount * 2 + 1; c++)
                 {
-                    Console.Write("-");
+                    separationChar = '-';
+                    if (r != rowsCount - 1)
+                    {
+                        if (c % 2 == 1)
+                        {
+                            int reventedC = c / 2;
+
+                            var fp = new Vector2(r, reventedC);
+                            var sp = new Vector2(r + 1, reventedC);
+
+                            if (game.DoesDeprecatedPathExist(new DeprecatedPath(fp, sp)))
+                            {
+                                Console.WriteLine(reventedC);
+                                Console.WriteLine("fp = " + fp);
+                                Console.WriteLine("sp = " + sp);
+                                
+                                separationChar = '■';
+                            }
+                        }
+                    }
+
+                    Console.Write(separationChar);
                 }
 
                 Console.WriteLine();
