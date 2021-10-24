@@ -37,107 +37,127 @@ namespace Quoridor.View
             game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2)));
             game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(0, 3)));
 
-            
+
             game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(4, 2), new Vector2(3, 2)));
 
             while (true)
             {
+                string turnInfoMessage = String.Empty;
+
                 DisplayField(game);
-                Console.WriteLine(game.GetCurrentPlayer().Name + " turns");
+
+                Console.WriteLine("Deprecated paths:");
+                game.DeprecatedPaths.ForEach(p => Console.WriteLine(p));
+                Console.WriteLine();
+
+                Console.WriteLine(game.GetCurrentPlayer().Name + " turns.");
 
                 Console.WriteLine("What would you like to do?");
 
-                Console.WriteLine("1. Move");
-                Console.WriteLine("2. Set wall");
+                Console.WriteLine("1. Move.");
+                Console.WriteLine("2. Set wall.");
 
                 Console.Write("Your choice: ");
                 string turnInput = Console.ReadLine();
 
                 bool turnResult = false;
 
-                if (turnInput == "1")
+                if (turnInput == "1" || turnInput == "2")
                 {
-                    Console.WriteLine("w to move up");
-                    Console.WriteLine("a to move left");
-                    Console.WriteLine("s to move down");
-                    Console.WriteLine("d to move right");
-
-                    Console.Write("Your choice: ");
-                    string directionInput = Console.ReadLine();
-                    switch (directionInput)
+                    if (turnInput == "1")
                     {
-                        case "w":
-                            turnResult = game.TryMoveCurrentPlayer(Direction.Up);
-                            break;
+                        Console.WriteLine("w to move up");
+                        Console.WriteLine("a to move left");
+                        Console.WriteLine("s to move down");
+                        Console.WriteLine("d to move right");
 
-                        case "s":
-                            turnResult = game.TryMoveCurrentPlayer(Direction.Down);
-                            break;
-
-                        case "a":
-                            turnResult = game.TryMoveCurrentPlayer(Direction.Left);
-                            break;
-
-                        case "d":
-                            turnResult = game.TryMoveCurrentPlayer(Direction.Right);
-                            break;
-                    }
-                }
-                else if (turnInput == "2")
-                {
-                    try
-                    {
-                        Console.Write("Enter x1: ");
-                        int.TryParse(Console.ReadLine(), out var x1);
-
-                        Console.Write("Enter y1: ");
-                        int.TryParse(Console.ReadLine(), out var y1);
-
-                        Console.Write("Enter x2: ");
-                        int.TryParse(Console.ReadLine(), out var x2);
-
-                        Console.Write("Enter y2: ");
-                        int.TryParse(Console.ReadLine(), out var y2);
-
-                        Vector2 firstPoint = new Vector2(x1, y1);
-                        Vector2 secondPoint = new Vector2(x2, y2);
-
-                        if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
+                        Console.Write("Your choice: ");
+                        string directionInput = Console.ReadLine();
+                        switch (directionInput)
                         {
-                            // check if cells are close
-                            
-                            // Cell firstCell = game.Field.Cells[firstPoint.x, firstPoint.y];
-                            // Cell secondCell = game.Field.Cells[secondPoint.x, secondPoint.y];
-                            // 
-                            // if (firstCell.UpperCell == secondCell ||
-                            //     firstCell.LowerCell == secondCell ||
-                            //     firstCell.LeftCell == secondCell ||
-                            //     firstCell.RightCell == secondCell)
-                            {
-                                turnResult =
-                                    game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1), new Vector2(x2, y2)));
-                            }
+                            case "w":
+                                turnResult = game.TryMoveCurrentPlayer(Direction.Up);
+                                goto default;
+
+                            case "s":
+                                turnResult = game.TryMoveCurrentPlayer(Direction.Down);
+                                goto default;
+
+                            case "a":
+                                turnResult = game.TryMoveCurrentPlayer(Direction.Left);
+                                goto default;
+
+                            case "d":
+                                turnResult = game.TryMoveCurrentPlayer(Direction.Right);
+                                goto default;
+
+                            default:
+                                turnInfoMessage = "You've made incorrect move. Turn again.";
+                                break;
                         }
                     }
-                    catch
+                    else if (turnInput == "2")
                     {
-                        turnResult = false;
+                        try
+                        {
+                            Console.Write("Enter x1: ");
+                            int.TryParse(Console.ReadLine(), out var x1);
+
+                            Console.Write("Enter y1: ");
+                            int.TryParse(Console.ReadLine(), out var y1);
+
+                            Console.Write("Enter x2: ");
+                            int.TryParse(Console.ReadLine(), out var x2);
+
+                            Console.Write("Enter y2: ");
+                            int.TryParse(Console.ReadLine(), out var y2);
+
+                            Vector2 firstPoint = new Vector2(x1, y1);
+                            Vector2 secondPoint = new Vector2(x2, y2);
+
+                            DeprecatedPath deprecatedPath = new DeprecatedPath(firstPoint, secondPoint);
+
+                            if (!game.DoesDeprecatedPathExist(deprecatedPath))
+                            {
+                                if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
+                                {
+                                    // check if cells are close
+                                    if (Vector2.Distance(firstPoint, secondPoint) - 1f < 0.000000001f)
+                                    {
+                                        Console.WriteLine(turnResult =
+                                            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1),
+                                                new Vector2(x2, y2))));
+                                    }
+                                }
+                                else
+                                {
+                                    turnInfoMessage = "One of entered points is out of field range.";
+                                }
+                            }
+                            else
+                            {
+                                turnInfoMessage = $"Depracated path {deprecatedPath} already exists.";
+                            }
+                        }
+                        catch
+                        {
+                            turnResult = false;
+                            turnInfoMessage = "Please, enter integer numbers for coordinates.";
+                        }
                     }
                 }
-                else if (turnInput == "3")
+                else
                 {
-                    Console.WriteLine("Deprecated paths:");
-                    game.DeprecatedPaths.ForEach(p => Console.WriteLine(p));
-                    Console.WriteLine();
+                    turnInfoMessage = "Please, choose correct menu item.";
                 }
-
+                
                 if (turnResult)
                 {
                     game.SwitchPlayer();
                 }
                 else
                 {
-                    Console.WriteLine("You've made incorrect move. Turn again.");
+                    Console.WriteLine(turnInfoMessage);
                 }
             }
         }
@@ -165,12 +185,12 @@ namespace Quoridor.View
                 for (int c = 0; c < columsCount; c++)
                 {
                     separationChar = '|';
-                    
+
                     if (c == 0)
                     {
                         Console.Write(separationChar);
                     }
-                    
+
                     if (!game.Field.IsOutOfRange(new Vector2(r, c + 1)))
                     {
                         if (game.DoesDeprecatedPathExist(new DeprecatedPath(new Vector2(r, c), new Vector2(r, c + 1))))
@@ -178,7 +198,7 @@ namespace Quoridor.View
                             separationChar = '■';
                         }
                     }
-                    
+
                     Player playerOver = field[r, c].PlayerOver;
                     if (playerOver != null)
                     {

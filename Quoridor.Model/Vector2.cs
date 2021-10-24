@@ -1,4 +1,6 @@
-﻿namespace Quoridor
+﻿using System;
+
+namespace Quoridor
 {
     public struct Vector2
     {
@@ -15,6 +17,11 @@
         {
             this.x = x;
             this.y = y;
+        }
+
+        public static double Distance(Vector2 a, Vector2 b)
+        {
+            return Math.Pow(Math.Pow(a.x - b.x, 2) + Math.Pow((a.y - b.y), 2), (1d/2d));
         }
 
         public static Vector2 operator +(Vector2 a, Vector2 b) => new(a.x + b.x, a.y + b.y);
