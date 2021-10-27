@@ -11,6 +11,8 @@ namespace Quoridor.View
     {
         public static void Main(string[] args)
         {
+            const float k_Tolerance = 0.000000001f;
+            
             Console.WriteLine("Welcome to Quoridor!");
 
             // Console.Write("Enter first player name: ");
@@ -33,12 +35,6 @@ namespace Quoridor.View
             var secondPlayer = new Player("secondPlayerName");
 
             var game = new Quoridor(x, y, firstPlayer, secondPlayer);
-
-            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2)));
-            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(0, 3)));
-
-
-            game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(4, 2), new Vector2(3, 2)));
 
             while (true)
             {
@@ -122,7 +118,7 @@ namespace Quoridor.View
                                 if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
                                 {
                                     // check if cells are close
-                                    if (Vector2.Distance(firstPoint, secondPoint) - 1f < 0.000000001f)
+                                    if (Vector2.Distance(firstPoint, secondPoint) - 1f < k_Tolerance)
                                     {
                                         Console.WriteLine(turnResult =
                                             game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1),
@@ -171,7 +167,7 @@ namespace Quoridor.View
             int rowsCount = field.GetLength(0);
             int columsCount = field.GetLength(1);
 
-            char separationChar = '-';
+            char separationChar = '■';
 
             for (int c = 0; c < columsCount * 2 + 1; c++)
             {
@@ -184,24 +180,28 @@ namespace Quoridor.View
             {
                 for (int c = 0; c < columsCount; c++)
                 {
-                    separationChar = '|';
-
                     if (c == 0)
                     {
+                        separationChar = '█';
                         Console.Write(separationChar);
                     }
+
+                    separationChar = '|';
 
                     if (!game.Field.IsOutOfRange(new Vector2(r, c + 1)))
                     {
                         if (game.DoesDeprecatedPathExist(new DeprecatedPath(new Vector2(r, c), new Vector2(r, c + 1))))
                         {
-                            separationChar = '■';
+                            separationChar = '█';
                         }
                     }
 
                     Player playerOver = field[r, c].PlayerOver;
                     if (playerOver != null)
                     {
+                        if (c == columsCount - 1)
+                            separationChar = '█';
+
                         if (playerOver == firstPlayer)
                         {
                             Console.Write("1" + separationChar);
@@ -213,7 +213,12 @@ namespace Quoridor.View
                     }
                     else
                     {
-                        Console.Write(" |");
+                        if (c == columsCount - 1)
+                        {
+                            separationChar = '█';
+                        }
+
+                        Console.Write(" " + separationChar);
                     }
                 }
 
@@ -222,7 +227,11 @@ namespace Quoridor.View
                 for (int c = 0; c < columsCount * 2 + 1; c++)
                 {
                     separationChar = '-';
-                    if (r != rowsCount - 1)
+                    if (c == 0 || c == columsCount * 2)
+                    {
+                        separationChar = '█';
+                    }
+                    else if (r != rowsCount - 1)
                     {
                         if (c % 2 == 1)
                         {
@@ -234,6 +243,10 @@ namespace Quoridor.View
                                 separationChar = '■';
                             }
                         }
+                    }
+                    else if(r == rowsCount - 1)
+                    {
+                        separationChar = '■';
                     }
 
                     Console.Write(separationChar);
