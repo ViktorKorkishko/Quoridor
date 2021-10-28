@@ -10,15 +10,24 @@ namespace Quoridor
         SecondPlayer = 1
     }
 
+    public enum GameStage
+    {
+        Playing = 0,
+        End = 1,
+    }
+
     public class Quoridor
     {
         public readonly Player FirstPlayer;
         public readonly Player SecondPlayer;
 
         public Turn CurrentPlayerTurn { get; private set; }
+        public GameStage CurrentStage { get; private set; }
 
         public readonly Field Field;
         public readonly List<DeprecatedPath> DeprecatedPaths;
+
+        public event Action<Player> OnWinning;
 
         public Quoridor(int rows, int columns, Player firstPlayer, Player secondPlayer)
         {
@@ -28,6 +37,7 @@ namespace Quoridor
             FirstPlayer = firstPlayer;
             SecondPlayer = secondPlayer;
             CurrentPlayerTurn = Turn.FirstPlayer;
+            CurrentStage = GameStage.Playing;
 
             SetupField();
             PlacePlayersOnStartPosition();
@@ -50,6 +60,8 @@ namespace Quoridor
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Left);
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+
+                            CheckWinning();
                             return true;
                         }
                     }
@@ -66,6 +78,8 @@ namespace Quoridor
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Right);
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+
+                            CheckWinning();
                             return true;
                         }
                     }
@@ -82,6 +96,8 @@ namespace Quoridor
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Down);
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+
+                            CheckWinning();
                             return true;
                         }
                     }
@@ -98,6 +114,8 @@ namespace Quoridor
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = null;
                             player.Move(Vector2.Up);
                             Field.Cells[player.Position.x, player.Position.y].PlayerOver = player;
+
+                            CheckWinning();
                             return true;
                         }
                     }
@@ -107,6 +125,21 @@ namespace Quoridor
 
             return false;
         }
+
+        private void CheckWinning()
+        {
+            if (FirstPlayer.Position.x == Field.Size.y - 1)
+            {
+                OnWinning?.Invoke(FirstPlayer);
+                CurrentStage = GameStage.End;
+            }
+            else if(SecondPlayer.Position.x == 0)
+            {
+                OnWinning?.Invoke(SecondPlayer);
+                CurrentStage = GameStage.End;
+            }
+        }
+
 
         public Player GetCurrentPlayer()
         {
