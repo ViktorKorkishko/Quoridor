@@ -21,12 +21,12 @@ namespace Quoridor.View
                 Console.WriteLine("Choose menu item: ");
                 Console.WriteLine("1. Start");
                 Console.WriteLine("2. Close");
-
+            
                 menuInput = Console.ReadLine();
-
+            
                 if (menuInput == "1")
                     break;
-
+            
                 if (menuInput == "2")
                     return;
             }
@@ -53,6 +53,18 @@ namespace Quoridor.View
                 var secondPlayer = new Player("secondPlayerName");
 
                 var game = new Quoridor(x, y, firstPlayer, secondPlayer);
+
+                // game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 0), new Vector2(1, 0)));
+                // game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 1), new Vector2(1, 1)));
+                // game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2)));
+                // game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 3), new Vector2(1, 3)));
+                // game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 4), new Vector2(1, 4)));
+
+                
+                game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(0, 1)));
+                game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(1, 2)));
+                game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(0, 2), new Vector2(0, 3)));
+
                 game.OnWinning += OnWinningHandler;
 
                 while (game.CurrentStage == GameStage.Playing)
@@ -136,10 +148,9 @@ namespace Quoridor.View
                                 {
                                     if (!game.Field.IsOutOfRange(firstPoint) && !game.Field.IsOutOfRange(secondPoint))
                                     {
-                                        // check if cells are close
                                         if (Vector2.Distance(firstPoint, secondPoint) - 1f < k_Tolerance)
                                         {
-                                            Console.WriteLine(turnResult =
+                                            Console.WriteLine(turnResult = 
                                                 game.TryAddDeprecatedPath(new DeprecatedPath(new Vector2(x1, y1),
                                                     new Vector2(x2, y2))));
                                         }

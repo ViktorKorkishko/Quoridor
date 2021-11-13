@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Quoridor
 {
@@ -133,7 +134,7 @@ namespace Quoridor
                 OnWinning?.Invoke(FirstPlayer);
                 CurrentStage = GameStage.End;
             }
-            else if(SecondPlayer.Position.x == 0)
+            else if (SecondPlayer.Position.x == 0)
             {
                 OnWinning?.Invoke(SecondPlayer);
                 CurrentStage = GameStage.End;
@@ -202,10 +203,121 @@ namespace Quoridor
             if (!DoesDeprecatedPathExist(newDeprecatedPath))
             {
                 DeprecatedPaths.Add(newDeprecatedPath);
+
+                if (IsAnyPlayerBlocked())
+                {
+                    DeprecatedPaths.Remove(newDeprecatedPath);
+                    return false;
+                }
+
                 return true;
             }
 
             return false;
+        }
+
+        public bool IsAnyPlayerBlocked()
+        {
+            Vector2 fieldSize = Field.Size;
+
+            List<Vector2> positionsThatHaveToBeReachableForFirstPlayer = new List<Vector2>();
+            for (int y = 0; y < fieldSize.y; y++)
+            {
+                positionsThatHaveToBeReachableForFirstPlayer.Add(Field.Cells[fieldSize.x - 1, y].Position);
+            }
+
+            Vector2 firstPlayerPosition = FirstPlayer.Position;
+
+            // Cell currentCell = Field.Cells[firstPlayerPosition.x, firstPlayerPosition.y];
+            Cell currentCell = new Cell(Field, firstPlayerPosition);
+            
+            List<Vector2> positionsThatPlayerCanReach = new List<Vector2>();
+
+            positionsThatPlayerCanReach.Add(currentCell.Position);
+
+            for (int i = 0; i <= positionsThatPlayerCanReach.ToList().Count; i++)
+            {
+                currentCell.Position = positionsThatPlayerCanReach[i];
+
+                var upperPoint = currentCell.UpperCell;
+                if (upperPoint != null)
+                {
+                    var deprecatedPath = new DeprecatedPath(currentCell.Position, upperPoint.Position);
+                    if (!DoesDeprecatedPathExist(deprecatedPath))
+                    {
+                        if (!positionsThatPlayerCanReach.Contains(upperPoint.Position))
+                        {
+                            positionsThatPlayerCanReach.Add(upperPoint.Position);
+
+                            if (positionsThatHaveToBeReachableForFirstPlayer.Contains(upperPoint.Position))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                var lowerPoint = currentCell.LowerCell;
+                if (lowerPoint != null)
+                {
+                    var deprecatedPath = new DeprecatedPath(currentCell.Position, lowerPoint.Position);
+                    if (!DoesDeprecatedPathExist(deprecatedPath))
+                    {
+                        if (!positionsThatPlayerCanReach.Contains(lowerPoint.Position))
+                        {
+                            positionsThatPlayerCanReach.Add(lowerPoint.Position);
+
+                            if (positionsThatHaveToBeReachableForFirstPlayer.Contains(lowerPoint.Position))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                var leftPoint = currentCell.LeftCell;
+                if (leftPoint != null)
+                {
+                    var deprecatedPath = new DeprecatedPath(currentCell.Position, leftPoint.Position);
+                    if (!DoesDeprecatedPathExist(deprecatedPath))
+                    {
+                        if (!positionsThatPlayerCanReach.Contains(leftPoint.Position))
+                        {
+                            positionsThatPlayerCanReach.Add(leftPoint.Position);
+
+                            if (positionsThatHaveToBeReachableForFirstPlayer.Contains(leftPoint.Position))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                var rightPoint = currentCell.RightCell;
+                if (rightPoint != null)
+                {
+                    var deprecatedPath = new DeprecatedPath(currentCell.Position, rightPoint.Position);
+                    if (!DoesDeprecatedPathExist(deprecatedPath))
+                    {
+                        if (!positionsThatPlayerCanReach.Contains(rightPoint.Position))
+                        {
+                            positionsThatPlayerCanReach.Add(rightPoint.Position);
+
+                            if (positionsThatHaveToBeReachableForFirstPlayer.Contains(rightPoint.Position))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                if (currentCell.Position == positionsThatPlayerCanReach[positionsThatPlayerCanReach.Count - 1])
+                {
+                    return true;
+                }
+            }
+            
+            return true;
         }
 
         public bool DoesDeprecatedPathExist(DeprecatedPath deprecatedPath)
